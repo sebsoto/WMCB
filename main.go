@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	"log"
 	"os"
 	"path/filepath"
@@ -14,9 +13,10 @@ import (
 	ignitionv2 "github.com/coreos/ignition/config/v2_2"
 	"github.com/vincent-petithory/dataurl"
 
+	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/serializer"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	kubeletConfig "k8s.io/kubelet/config/v1beta1"
-
-	"k8s.io/client-go/kubernetes/scheme"
 )
 
 const kubesInstallDir = "/tmp/k" //"c:\\k"
@@ -47,11 +47,12 @@ func main() {
 				if err != nil {
 					return out, err
 				}
-				err = kubeletConfig.AddToScheme(scheme.Scheme)
+				scheme := runtime.NewScheme()
+				err = kubeletConfig.AddToScheme(scheme)
 				if err != nil {
 					return out, err
 				}
-				d := scheme.Codecs.UniversalDeserializer()
+				d := serializer.NewCodecFactory(scheme).UniversalDeserializer()
 				config := kubeletConfig.KubeletConfiguration{}
 				_, _, err = d.Decode(doc, nil, &config)
 				if err != nil {

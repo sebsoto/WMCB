@@ -10,6 +10,5 @@ require (
 	github.com/vincent-petithory/dataurl v0.0.0-20160330182126-9a301d65acbb
 	go4.org v0.0.0-20190313082347-94abd6928b1d // indirect
 	k8s.io/apimachinery v0.0.0-20190831074630-461753078381
-	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/kubelet v0.0.0-20190831080713-e78366423f3e
 )
